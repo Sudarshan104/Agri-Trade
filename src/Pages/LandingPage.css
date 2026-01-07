@@ -1,0 +1,81 @@
+/* ===== BACKGROUND ===== */
+.landing-bg {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8f5ec, #cfe8d8);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ===== CARD ===== */
+.landing-card {
+  background: #ffffff;
+  max-width: 950px;
+  width: 92%;
+  padding: 55px;
+  border-radius: 26px;
+  text-align: center;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== TAG ===== */
+.platform-tag {
+  display: inline-block;
+  background: #e9f8ef;
+  color: #1e7f46;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ===== TITLE ===== */
+.landing-title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #164d2d;
+  margin-bottom: 18px;
+}
+
+/* ===== SUBTITLE ===== */
+.landing-subtitle {
+  font-size: 18px;
+  color: #4a5d52;
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto 35px;
+}
+
+/* ===== HERO IMAGE ===== */
+.hero-image-container {
+  margin: 30px 0 35px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hero-image {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== FOOT TEXT ===== */
+.landing-footer-text {
+  font-size: 15px;
+  color: #6b7d72;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .landing-title {
+    font-size: 32px;
+  }
+
+  .hero-image {
+    height: 220px;
+  }
+}

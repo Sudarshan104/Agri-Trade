@@ -1,0 +1,62 @@
+/* ================= ADD PRODUCT ================= */
+.content-card {
+  background: #ffffff;
+  max-width: 500px;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+}
+
+.content-card h2 {
+  text-align: center;
+  color: #1b4332;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: all 0.25s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 3px rgba(45,106,79,0.2);
+}
+
+.add-btn {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #2d6a4f, #1b4332);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.add-btn:hover {
+  transform: translateY(-2px);
+}
+
+.add-btn:disabled {
+  background: #9dbbb0;
+  cursor: not-allowed;
+}

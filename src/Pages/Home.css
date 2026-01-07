@@ -1,0 +1,184 @@
+/* ===== BASE ===== */
+.home-page {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== NAVBAR ===== */
+.navbar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  padding: 20px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.logo {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* ===== NAV BUTTON GROUP ===== */
+.nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ===== COMMON BUTTON STYLE ===== */
+.login-btn,
+.register-btn {
+  height: 44px;                 /* same height */
+  min-width: 120px;             /* same width */
+  display: inline-flex;         /* fixes Link alignment */
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0 24px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+/* ===== LOGIN BUTTON (PRIMARY) ===== */
+.login-btn {
+  background: #2ea44f;
+  color: #ffffff;
+  border: none;
+}
+
+.login-btn:hover {
+  background: #22863a;
+}
+
+/* ===== REGISTER BUTTON (SECONDARY) ===== */
+.register-btn {
+  background: #ffffff;          /* light background */
+  color: #2ea44f;               /* green text */
+  border: 2px solid #ffffff;
+}
+
+.register-btn:hover {
+  background: #f1f4f2;          /* subtle hover */
+  color: #22863a;
+}
+
+/* ===== HERO SECTION ===== */
+.hero-section {
+  height: 90vh;
+  background-image: url("https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=1600&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 80px;
+  max-width: 700px;
+}
+
+.hero-overlay h1 {
+  font-size: 44px;
+  margin-bottom: 15px;
+}
+
+.hero-overlay p {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 70px 80px;
+  background: #ffffff;
+  color: #333333;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+}
+
+/* ===== FEATURES ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.feature-item {
+  background: #f5f7f6;
+  padding: 20px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* ===== HOW IT WORKS ===== */
+.how-it-works ul {
+  padding-left: 20px;
+}
+
+.how-it-works li {
+  margin-bottom: 10px;
+}
+
+/* ===== STATS ===== */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  background: #f1f4f2;
+  text-align: center;
+}
+
+.stats h3 {
+  font-size: 32px;
+  color: #2ea44f;
+}
+
+.stats p {
+  margin-top: 6px;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: #0f2f22;
+  color: #ffffff;
+  text-align: center;
+  padding: 18px;
+  font-size: 14px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 15px 20px;
+  }
+
+  .hero-overlay {
+    padding: 0 30px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 32px;
+  }
+
+  .section {
+    padding: 50px 30px;
+  }
+
+  .stats {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
