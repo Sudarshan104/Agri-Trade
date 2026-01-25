@@ -1,123 +1,176 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useContext } from "react";
 import API from "../Services/api";
 import { getUser } from "../utils/Auth";
+import PaymentForm from "../components/PaymentForm";
+import { CartContext } from "./RetailerLayout";
 import "./RetailerDashboard.css";
 
+const CART_KEY = "retailer_cart";
+
 export default function RetailerDashboard() {
-  const [products, setProducts] = useState([]);
-  const [qty, setQty] = useState({});
   const user = getUser();
 
-  /* ================= LOAD ALL PRODUCTS ================= */
-  const loadAllProducts = async () => {
+  const [products, setProducts] = useState([]);
+  const [qty, setQty] = useState({});
+  const [category, setCategory] = useState("");
+  const [searchText, setSearchText] = useState("");
+
+
+
+
+
+  /* ================= LOAD PRODUCTS ================= */
+  const loadProducts = async () => {
     try {
       const res = await API.get("/products");
-      setProducts(res.data || []);
+      setProducts(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
-      console.error("Failed to load products", err);
+      console.log("Load products error:", err);
+      alert("Failed to load products");
       setProducts([]);
     }
   };
 
-  /* ================= INITIAL LOAD ================= */
   useEffect(() => {
-    loadAllProducts();
+    loadProducts();
   }, []);
 
-  /* ================= PLACE ORDER ================= */
-  const placeOrder = async (productId) => {
-    if (!user?.id) {
-      alert("Please login again");
-      return;
-    }
-
-    const quantity = Number(qty[productId]);
-
-    if (!quantity || quantity <= 0) {
-      alert("Please enter a valid quantity");
-      return;
-    }
-
-    try {
-      await API.post("/orders", {
-        productId: productId,
-        retailerId: user.id,
-        quantity: quantity,
+  /* ================= FILTER PRODUCTS ================= */
+  const filteredProducts = useMemo(() => {
+    return products
+      .filter((p) => {
+        if (!category) return true;
+        return (p.category || "").toLowerCase() === category.toLowerCase();
+      })
+      .filter((p) => {
+        const name = (p.name || "").toLowerCase();
+        return name.includes(searchText.toLowerCase());
       });
+  }, [products, category, searchText]);
 
-      alert("Order placed successfully ✅");
+  const { addToCart: contextAddToCart, cart } = useContext(CartContext);
 
-      // reload products & reset quantity input
-      loadAllProducts();
-      setQty((prev) => ({ ...prev, [productId]: "" }));
-    } catch (err) {
-      console.error("Order failed:", err.response?.data || err);
-
-      // ✅ FIX FOR [object Object]
-      alert(
-        err.response?.data?.message ||
-          err.response?.data ||
-          "Failed to place order"
-      );
+  /* ================= ADD TO CART ================= */
+  const addToCart = (product) => {
+    const quantity = Number(qty[product.id]);
+    if (!quantity || quantity <= 0) {
+      alert("Enter valid quantity to add to cart");
+      return;
     }
+
+    // Calculate available quantity (original - cart quantity)
+    const cartItem = cart.find(item => item.productId === product.id);
+    const cartQuantity = cartItem ? cartItem.quantity : 0;
+    const availableQuantity = (product.quantity || 0) - cartQuantity;
+
+    if (quantity > availableQuantity) {
+      alert("Not enough stock available");
+      return;
+    }
+
+    contextAddToCart(product, quantity);
+
+    // clear input for that product
+    setQty((prev) => ({ ...prev, [product.id]: "" }));
   };
+
+
 
   return (
     <div className="retailer-container">
-      <h2 className="dashboard-title">Available Products</h2>
+      {/* Header */}
+      <div className="retailer-header">
+        <h2 className="dashboard-title">Available Products</h2>
+      </div>
 
-      {products.length === 0 ? (
-        <p style={{ textAlign: "center" }}>No products available</p>
+      {/* Search + Filter */}
+      <div className="search-filter-bar">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="search-input"
+        />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="category-select"
+        >
+          <option value="">All Categories</option>
+          <option value="Vegetable">Vegetable</option>
+          <option value="Fruit">Fruit</option>
+          <option value="Grain">Grain</option>
+        </select>
+      </div>
+
+      {/* Products */}
+      {filteredProducts.length === 0 ? (
+        <p className="empty-text">No products available</p>
       ) : (
         <div className="product-grid">
-          {products.map((p) => {
-            const inStock = p.quantity > 0;
+          {filteredProducts.map((p) => {
+            // Calculate available quantity (original - cart quantity)
+            const cartItem = cart.find(item => item.productId === p.id);
+            const cartQuantity = cartItem ? cartItem.quantity : 0;
+            const availableQuantity = (p.quantity || 0) - cartQuantity;
+            const inStock = availableQuantity > 0;
 
             return (
               <div className="product-card" key={p.id}>
-                {/* PRODUCT IMAGE */}
                 {p.imageUrl ? (
                   <img
                     src={`http://localhost:9090${p.imageUrl}`}
-                    alt={p.name}
+                    alt={p.name || "Product"}
                     className="product-image"
+                    onError={(e) => (e.target.style.display = "none")}
                   />
                 ) : (
                   <div className="product-image no-image">No Image</div>
                 )}
 
                 <div className="product-content">
-                  <h3 className="product-name">{p.name}</h3>
+                  <h3 className="product-name">{p.name || "Unnamed Product"}</h3>
+
+                  <p className="product-category">
+                    🏷️ Category: <span>{p.category || "N/A"}</span>
+                  </p>
+
+                  <p className="product-detail">💰 Price: ₹{p.price || 0} / kg</p>
 
                   <p className="product-detail">
-                    Price: ₹{p.price} / kg
+                    📦 Available: {availableQuantity} kg
                   </p>
 
-                  <p className="product-detail">
-                    Available: {p.quantity} kg
-                  </p>
-
-                  <p className="farmer-name">
-                    Farmer: {p.farmer?.name || "N/A"}
-                  </p>
+                  <div className="farmer-info">
+                    <p className="farmer-name">
+                      👨‍🌾 Farmer: {p.farmer?.name || "N/A"}
+                    </p>
+                    <p className="farmer-address">
+                      📍 Location: {p.farmer?.address || "Not provided"}
+                    </p>
+                  </div>
 
                   <input
                     type="number"
                     min="1"
-                    placeholder="Order Quantity"
+                    max={availableQuantity}
+                    placeholder="Quantity (kg)"
                     value={qty[p.id] || ""}
                     onChange={(e) =>
-                      setQty({ ...qty, [p.id]: e.target.value })
+                      setQty((prev) => ({ ...prev, [p.id]: e.target.value }))
                     }
                     disabled={!inStock}
                   />
 
+                  {/* ✅ Add to Cart */}
                   <button
-                    className="order-btn"
-                    onClick={() => placeOrder(p.id)}
+                    className="cart-add-btn"
+                    onClick={() => addToCart(p)}
                     disabled={!inStock}
                   >
-                    {inStock ? "Place Order" : "Out of Stock"}
+                    {inStock ? "Add to Cart" : "Out of Stock"}
                   </button>
                 </div>
               </div>

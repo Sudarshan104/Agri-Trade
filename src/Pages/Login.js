@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const login = async () => {
@@ -20,16 +21,22 @@ export default function Login() {
       setLoading(true);
       setError("");
 
-      const res = await API.post("/auth/login", { email, password });
+      // 🔐 Call backend login API
+      const res = await API.post("/auth/login", {
+        email,
+        password,
+      });
 
-      // ✅ Save user to localStorage
+      // ✅ Save logged-in user
       localStorage.setItem("user", JSON.stringify(res.data));
 
-      // 🔥 Force navbar & app to update immediately
+      // 🔄 Notify Navbar / ProtectedRoute immediately
       window.dispatchEvent(new Event("storage"));
 
-      // ✅ Navigate based on role
-      if (res.data.role === "FARMER") {
+      // 🔀 ROLE BASED REDIRECT
+      if (res.data.role === "ADMIN") {
+        navigate("/admin");
+      } else if (res.data.role === "FARMER") {
         navigate("/farmer");
       } else if (res.data.role === "RETAILER") {
         navigate("/retailer");

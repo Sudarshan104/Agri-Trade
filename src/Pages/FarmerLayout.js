@@ -14,12 +14,16 @@ export default function FarmerLayout() {
   }
 
   return (
-    <div className={`dashboard-container ${collapsed ? "sidebar-collapsed" : ""}`}>
+    <div
+      className={`dashboard-container ${
+        collapsed ? "sidebar-collapsed" : ""
+      }`}
+    >
+      {/* ================= SIDEBAR ================= */}
       <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
-
-        {/* ✅ HEADER */}
+        {/* HEADER */}
         <div className="sidebar-header">
-          
+          {!collapsed && <h3>Farmer</h3>}
 
           <button
             className="sidebar-toggle"
@@ -29,18 +33,42 @@ export default function FarmerLayout() {
           </button>
         </div>
 
+        {/* MENU */}
         <ul className="sidebar-menu">
           <li onClick={() => navigate("/farmer")}>
             📊 {!collapsed && "Dashboard"}
           </li>
+
           <li onClick={() => navigate("/farmer/add-product")}>
             ➕ {!collapsed && "Add Products"}
           </li>
+
           <li onClick={() => navigate("/farmer/products")}>
             📦 {!collapsed && "My Products"}
           </li>
-          <li>🧾 {!collapsed && "Orders"}</li>
-          <li>📈 {!collapsed && "Analytics"}</li>
+
+          <li onClick={() => navigate("/farmer/orders")}>
+            🧾 {!collapsed && "Orders"}
+          </li>
+
+          {/* ✅ ANALYTICS */}
+          <li onClick={() => navigate("/farmer/analytics")}>
+            📈 {!collapsed && "Analytics"}
+          </li>
+
+          {/* ✅ REVIEWS */}
+          <li onClick={() => navigate("/farmer/reviews")}>
+            ⭐ {!collapsed && "Reviews"}
+          </li>
+
+
+          {/* ✅ PROFILE (NEW) */}
+          <li onClick={() => navigate("/profile")}>
+            👤 {!collapsed && "My Profile"}
+          </li>
+
+
+          {/* LOGOUT */}
           <li
             className="logout"
             onClick={() => {
@@ -53,6 +81,7 @@ export default function FarmerLayout() {
         </ul>
       </aside>
 
+      {/* ================= MAIN CONTENT ================= */}
       <main className="dashboard-main">
         <Outlet />
       </main>

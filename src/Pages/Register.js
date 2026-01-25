@@ -8,13 +8,20 @@ export default function Register() {
     email: "",
     password: "",
     role: "FARMER",
+    address: ""
   });
 
   const [error, setError] = useState("");
 
   const submit = async () => {
+    // ✅ Validation
     if (!form.name || !form.email || !form.password) {
       setError("All fields are required");
+      return;
+    }
+
+    if (form.role === "FARMER" && !form.address) {
+      setError("Location is required for farmers");
       return;
     }
 
@@ -40,28 +47,52 @@ export default function Register() {
         <input
           type="text"
           placeholder="Full Name"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          value={form.name}
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
         />
 
         <input
           type="email"
           placeholder="Email Address"
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          value={form.email}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
         />
 
         <input
           type="password"
           placeholder="Password"
-          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          value={form.password}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
         />
 
+        {/* ROLE SELECTION */}
         <select
           value={form.role}
-          onChange={(e) => setForm({ ...form, role: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, role: e.target.value })
+          }
         >
           <option value="FARMER">Farmer</option>
           <option value="RETAILER">Retailer</option>
         </select>
+
+        {/* ✅ LOCATION ONLY FOR FARMER */}
+        {form.role === "FARMER" && (
+          <input
+            type="text"
+            placeholder="Farm Location / Village"
+            value={form.address}
+            onChange={(e) =>
+              setForm({ ...form, address: e.target.value })
+            }
+          />
+        )}
 
         <button className="register-btn" onClick={submit}>
           Register

@@ -1,27 +1,94 @@
 import { useEffect, useState } from "react";
 import API from "../Services/api";
 import { getUser } from "../utils/Auth";
+import "./FarmerOrders.css";
 
 export default function FarmerOrders() {
   const [orders, setOrders] = useState([]);
   const user = getUser();
 
   useEffect(() => {
+    if (!user?.id) return;
+
     API.get(`/orders/farmer/${user.id}`)
-      .then(res => setOrders(res.data));
-  }, []);
+      .then((res) => setOrders(res.data || []))
+      .catch(() => setOrders([]));
+  }, [user?.id]);
+
+  /* ================= CONFIRM STOCK ================= */
+  const confirmStock = async (orderId) => {
+    if (!window.confirm("Confirm that you have the stock available for this order?")) return;
+
+    try {
+      await API.put(`/orders/farmer/${orderId}/confirm-stock`, {
+        farmerId: user.id,
+      });
+
+      alert("Stock confirmed successfully ✅");
+      // Reload orders to update status
+      loadOrders();
+    } catch (err) {
+      console.error("Confirm stock error:", err);
+      const errorMessage = err.response?.data?.message || err.response?.data || "Failed to confirm stock";
+      alert(`Failed to confirm stock: ${errorMessage}`);
+    }
+  };
+
+  const loadOrders = async () => {
+    if (!user?.id) return;
+
+    try {
+      const res = await API.get(`/orders/farmer/${user.id}`);
+      setOrders(res.data || []);
+    } catch (err) {
+      console.error("Load orders error:", err);
+      setOrders([]);
+    }
+  };
 
   return (
-    <div>
-      <h2>Orders Received</h2>
-      {orders.map(o => (
-        <div key={o.id}>
-          <p>Product: {o.product.name}</p>
-          <p>Retailer: {o.retailer.name}</p>
-          <p>Quantity: {o.quantity}</p>
-          <p>Status: {o.status}</p>
+    <div className="farmer-orders-page">
+      <h2 className="orders-title">📦 Orders Received</h2>
+      <p className="orders-subtitle">
+        Track all orders placed by retailers for your products
+      </p>
+
+      {orders.length === 0 ? (
+        <p className="no-orders">No orders received yet</p>
+      ) : (
+        <div className="orders-grid">
+          {orders.map((o) => (
+            <div className="order-card" key={o.id}>
+              <h3 className="product-name">
+                {o.product?.name || "Product unavailable"}
+              </h3>
+
+              <div className="order-info">
+                <p>
+                  <span>Retailer:</span> {o.retailer?.name || "N/A"}
+                </p>
+                <p>
+                  <span>Quantity:</span> {o.quantity} kg
+                </p>
+              </div>
+
+              <span className={`order-status ${o.status.toLowerCase()}`}>
+                {o.status}
+              </span>
+
+              {/* ✅ CONFIRM STOCK BUTTON */}
+              {o.status === "PROCESSING" && (
+                <button
+                  className="confirm-stock-btn"
+                  onClick={() => confirmStock(o.id)}
+                >
+                  ✅ Confirm Stock
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }

@@ -72,3 +72,72 @@
 .product-detail span {
   font-weight: 600;
 }
+
+/* ================= BUTTON UI ONLY ================= */
+
+/* Edit Button */
+.btn-edit {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1b4332, #2d6a4f);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 16px rgba(27, 67, 50, 0.25);
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(27, 67, 50, 0.3);
+}
+
+.btn-edit:active {
+  transform: translateY(0px);
+}
+
+/* Save Button */
+.btn-save {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2d6a4f, #40916c);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 14px rgba(45, 106, 79, 0.25);
+}
+
+.btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 106, 79, 0.3);
+}
+
+/* Cancel Button */
+.btn-cancel {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #444;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-cancel:hover {
+  background: #f2f2f2;
+  border-color: #aaa;
+  transform: translateY(-1px);
+}
